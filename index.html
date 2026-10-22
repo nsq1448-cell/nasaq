@@ -90,6 +90,9 @@ section.block{padding-block:72px}
 .slots i{display:block;height:10px;border-radius:10px;background:var(--mist)}
 .slots i.taken{background:var(--ink)}
 .cap-note{font-size:15px;color:var(--slate)}
+.busy-note{background:var(--amber-soft);border-radius:14px;padding:14px 16px;margin-bottom:20px;display:flex;flex-direction:column;gap:4px}
+.busy-note strong{font-size:17px}
+.busy-note p{font-size:15px;color:var(--ink-2)}
 .card{background:var(--white);border:1px solid var(--line);border-radius:22px;padding:30px;box-shadow:0 18px 40px -28px rgba(16,42,67,.35)}
 .field{display:flex;flex-direction:column;gap:6px}
 .field + .field{margin-top:18px}
@@ -245,7 +248,7 @@ dialog::backdrop{background:rgba(16,42,67,.55)}
       <div>
         <div class="sec-head">
           <h2 id="orderTitle">اطلب موقعك</h2>
-          <p>لا توجد مواعيد محددة متاحة حالياً، فاترك اسمك ورقم جوالك وفكرتك، وسنتواصل معك حين يتاح الوقت.</p>
+          <p>اكتب اسمك ورقم جوالك وفكرة موقعك، وسنتواصل معك قريباً بإذن الله.</p>
         </div>
         <div class="capacity" id="capacity" hidden>
           <div class="cap-row">
@@ -261,6 +264,10 @@ dialog::backdrop{background:rgba(16,42,67,.55)}
         <p class="loading" id="loading">جارٍ التحقق من توفّر استقبال الطلبات…</p>
 
         <form id="orderForm" novalidate hidden>
+          <div class="busy-note" id="busyNote" hidden>
+            <strong>لا توجد مواعيد محددة متاحة حالياً</strong>
+            <p>اترك اسمك ورقم جوالك وفكرتك، وسنتواصل معك حين يتاح الوقت، مع العلم أن التواصل قد يتأخر قليلاً لكثرة الطلبات.</p>
+          </div>
           <div class="field">
             <label for="fName">الاسم</label>
             <input id="fName" name="name" type="text" autocomplete="name" maxlength="60" required>
@@ -331,7 +338,7 @@ dialog::backdrop{background:rgba(16,42,67,.55)}
       <div class="settings">
         <div class="stat"><b id="sNew">0</b><span id="sNewLabel">طلبات جديدة</span></div>
         <div class="field">
-          <label for="limitInput">الحدّ الأقصى للطلبات الجديدة</label>
+          <label for="limitInput">عدد الطلبات قبل تنبيه الانتظار</label>
           <div class="limit-row">
             <input id="limitInput" type="number" min="1" max="100" inputmode="numeric">
             <button class="mini primary" id="saveLimit" type="button">حفظ</button>
@@ -353,7 +360,7 @@ dialog::backdrop{background:rgba(16,42,67,.55)}
 
 <script>
 /* ===== الإعداد: ضعي هنا رابط تطبيق الويب من Google Apps Script بعد النشر ===== */
-const API_URL = "https://script.google.com/macros/s/AKfycbwroGXY9D8d5D-hUrbSEgXZTniPtQ1IQinDFpdzMBfY3JbGxJBP7fYRwHmX7VsFYqAvlw/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbwuDYaS0qFs1geMni4Ek_U6faz6GsRSDkIR57Ak_XFVBm5sa3Cyhj6e_kGLw7BHXUtiCA/exec";
 
 /* ===== أدوات عامة ===== */
 const $ = (id) => document.getElementById(id);
@@ -377,7 +384,7 @@ function nowStr(){
 }
 function statusOf(s){
   const newCount = s.items.filter(i => i.status === NEW).length;
-  return { ok: true, open: !s.closed && newCount < s.limit, closed: !!s.closed, limit: s.limit, newCount, remaining: Math.max(0, s.limit - newCount) };
+  return { ok: true, open: !s.closed, busy: newCount >= s.limit, closed: !!s.closed, limit: s.limit, newCount, remaining: Math.max(0, s.limit - newCount) };
 }
 let toastTimer;
 function toast(msg){
@@ -407,7 +414,7 @@ const demo = (() => {
       const s = load(), st = statusOf(s);
       if (!st.open) return { ok: false, full: true };
       s.items.push({ id: String(Date.now()), date: nowStr(), name: d.name, phone: d.phone, idea: d.idea, status: NEW });
-      save(); return { ok: true };
+      save(); return { ok: true, busy: st.busy };
     },
     admin_list(d){
       if (!auth(d)) return deny;
@@ -447,7 +454,8 @@ function renderCapacity(st){
   $('capacity').hidden = false;
   const slots = $('slots'); slots.innerHTML = ''; slots.style.setProperty('--n', st.limit);
   for (let i = 0; i < st.limit; i++){ const el = document.createElement('i'); if (i < st.newCount) el.className = 'taken'; slots.appendChild(el); }
-  $('capCount').textContent = st.open ? ('متبقٍّ ' + st.remaining + ' من ' + st.limit) : 'مكتملة';
+  $('capCount').textContent = st.busy ? 'اكتملت المواعيد الحالية' : ('متبقٍّ ' + st.remaining + ' من ' + st.limit);
+  $('busyNote').hidden = !st.busy;
 }
 
 async function checkStatus(){
@@ -476,7 +484,7 @@ $('orderForm').addEventListener('submit', async (e) => {
   try {
     const r = await api('submit', { name, phone, idea });
     if (r.ok){
-      $('doneText').textContent = 'شكراً لك يا ' + name + '. سنتواصل معك على الرقم ' + phone + ' حين يتاح الوقت.';
+      $('doneText').textContent = 'شكراً لك يا ' + name + '. سنتواصل معك على الرقم ' + phone + (r.busy ? ' حين يتاح الوقت، وقد يتأخر التواصل قليلاً لكثرة الطلبات.' : ' في أقرب وقت.');
       show('doneState');
       $('orderForm').reset(); $('ideaCount').textContent = '0 / 500';
       try { const st = await api('status'); if (st.ok) renderCapacity(st); } catch (e2) {}
@@ -520,7 +528,7 @@ async function reload(){
 function renderAdmin(r){
   cache = r;
   $('sNew').textContent = r.newCount + ' / ' + r.limit;
-  $('sNewLabel').textContent = r.open ? 'طلبات جديدة · الاستقبال متاح' : 'طلبات جديدة · الاستقبال مغلق';
+  $('sNewLabel').textContent = 'طلبات جديدة · ' + (!r.open ? 'الاستقبال مغلق' : (r.busy ? 'يظهر للعملاء تنبيه الانتظار' : 'الاستقبال متاح'));
   $('limitInput').value = r.limit;
   $('closedToggle').checked = !!r.closed;
   document.querySelectorAll('.tab').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.f === filter)));
@@ -580,7 +588,7 @@ document.querySelectorAll('.tab').forEach(b => b.addEventListener('click', () =>
 $('saveLimit').addEventListener('click', async () => {
   const n = parseInt(toDigits($('limitInput').value), 10);
   if (!(n >= 1 && n <= 100)) { toast('اكتبي رقماً من 1 إلى 100'); return; }
-  try { const r = await api('admin_settings', { pin: PIN, limit: n }); if (r.ok) { toast('تمّ حفظ الحدّ الأقصى'); await reload(); } else toast(r.error || 'تعذّر الحفظ'); }
+  try { const r = await api('admin_settings', { pin: PIN, limit: n }); if (r.ok) { toast('تمّ حفظ العدد'); await reload(); } else toast(r.error || 'تعذّر الحفظ'); }
   catch (e) { toast('تعذّر الاتصال'); }
 });
 $('closedToggle').addEventListener('change', async (e) => {
