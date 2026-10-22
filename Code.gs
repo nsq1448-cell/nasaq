@@ -66,7 +66,7 @@ function setSheet_() {
   let sh = ss.getSheetByName(SHEET_SET);
   if (!sh) {
     sh = ss.insertSheet(SHEET_SET);
-    sh.getRange(1, 1, 2, 2).setValues([['الحد الأقصى للطلبات الجديدة', 5], ['إيقاف الاستقبال يدوياً', false]]);
+    sh.getRange(1, 1, 2, 2).setValues([['عدد الطلبات قبل تنبيه الانتظار', 5], ['إيقاف الاستقبال يدوياً', false]]);
     sh.setRightToLeft(true);
   }
   return sh;
@@ -93,7 +93,8 @@ function status_() {
   const newCount = rows_().filter(function (r) { return r.status === NEW; }).length;
   return {
     ok: true,
-    open: !s.closed && newCount < s.limit,
+    open: !s.closed,
+    busy: newCount >= s.limit,
     closed: s.closed,
     limit: s.limit,
     newCount: newCount,
@@ -128,7 +129,8 @@ function submit_(b) {
   const lock = LockService.getScriptLock();
   lock.waitLock(20000);
   try {
-    if (!status_().open) return { ok: false, full: true };
+    const st = status_();
+    if (!st.open) return { ok: false, full: true };
     const sh = reqSheet_();
     const row = sh.getLastRow() + 1;
     const id = Utilities.getUuid().slice(0, 8);
@@ -136,7 +138,7 @@ function submit_(b) {
     sh.getRange(row, 1, 1, HEADERS.length)
       .setNumberFormat('@')
       .setValues([[id, date, name, phone, idea, NEW]]);
-    return { ok: true };
+    return { ok: true, busy: st.busy };
   } finally {
     lock.releaseLock();
   }
@@ -183,7 +185,7 @@ function adminSettings_(b) {
   const sh = setSheet_();
   if (b.limit !== undefined) {
     const n = parseInt(b.limit, 10);
-    if (!(n >= 1 && n <= 100)) return { ok: false, error: 'الحد الأقصى يجب أن يكون من 1 إلى 100.' };
+    if (!(n >= 1 && n <= 100)) return { ok: false, error: 'العدد يجب أن يكون من 1 إلى 100.' };
     sh.getRange(1, 2).setValue(n);
   }
   if (b.closed !== undefined) sh.getRange(2, 2).setValue(b.closed === true);
