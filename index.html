@@ -80,6 +80,68 @@ section.block{padding-block:72px}
 .price-note{margin-top:36px;display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;background:var(--amber-soft);border-radius:var(--radius);padding:20px 24px}
 .price-note b{font-family:var(--display);font-size:26px;font-variant-numeric:tabular-nums}
 
+/* من أعمالنا */
+.works-band{background:var(--white);border-block:1px solid var(--line)}
+.works{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px 22px;margin-top:36px}
+.work{display:flex;flex-direction:column;gap:8px;min-width:0}
+.work h3{font-size:21px;margin-top:6px}
+.work p{color:var(--slate);font-size:16px}
+.work .work-client{font-size:14px;color:var(--ink-2);font-weight:500}
+.work-type{align-self:flex-start;margin-top:10px;font-size:13px;font-weight:700;color:var(--ink);background:var(--amber-soft);padding:2px 12px;border-radius:999px}
+.chips{list-style:none;padding:0;margin:6px 0 0;display:flex;flex-wrap:wrap;gap:6px}
+.chips li{font-size:13px;color:var(--ink-2);border:1px solid var(--line);border-radius:999px;padding:2px 10px}
+.shot{display:block;width:100%;max-width:100%;aspect-ratio:16/10;object-fit:cover;object-position:top;border-radius:14px;border:1px solid var(--line)}
+.thumb{aspect-ratio:16/10;max-width:100%;background:var(--ink);border-radius:14px;padding:14px 14px 0;overflow:hidden}
+.phone-thumb{display:flex;justify-content:center;align-items:flex-start;padding:20px 0 0}
+.phone{display:block;width:44%;max-width:100%;height:auto;aspect-ratio:5/8;object-fit:cover;object-position:top;border:6px solid var(--ink-2);border-bottom:0;border-radius:18px 18px 0 0;background:var(--white)}
+.mock{background:var(--white);border-radius:8px 8px 0 0;height:100%;display:flex;flex-direction:column;overflow:hidden}
+.mock-bar{height:16px;flex:none;background:var(--mist);display:flex;align-items:center;gap:4px;padding-inline:8px}
+.mock-bar i{width:5px;height:5px;border-radius:50%;background:var(--line)}
+.mock-body{flex:1;padding:10px;min-height:0}
+.mock b,.mock i,.mock em{display:block}
+.m-dash{display:grid;grid-template-columns:1fr 3fr;gap:10px}
+.m-side{background:var(--ink);border-radius:6px;padding:8px 6px;display:flex;flex-direction:column;gap:6px}
+.m-side b{height:6px;border-radius:6px;background:rgba(255,255,255,.35)}
+.m-side b:first-child{background:var(--amber)}
+.m-main{display:flex;flex-direction:column;gap:6px}
+.m-row{height:14px;border-radius:4px;background:var(--mist)}
+.m-row.hd{background:var(--ink);opacity:.85}
+.m-doc{display:flex;flex-direction:column;gap:7px}
+.m-head{height:18px;border-radius:4px;background:var(--amber);opacity:.85}
+.m-line{height:6px;border-radius:6px;background:var(--line);width:100%}
+.w70{width:70%}.w85{width:85%}
+.m-table{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:3px}
+.m-table b{height:12px;background:var(--mist)}
+.m-table b:nth-child(-n+3){background:var(--ink);opacity:.8}
+.m-sign{display:flex;justify-content:space-between;margin-top:auto}
+.m-sign b{width:28%;height:12px;border-bottom:2px solid var(--ink);border-radius:0}
+.m-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.m-grid span{background:var(--paper);border:1px solid var(--line);border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px}
+.m-grid span i{width:16px;height:16px;border-radius:50%;background:var(--ink)}
+.m-grid span:nth-child(2) i{background:var(--amber)}
+.m-grid span b{width:55%;height:4px;border-radius:4px;background:var(--line)}
+.m-tools{display:flex;flex-direction:column;gap:8px}
+.m-tools span{flex:1;display:flex;align-items:center;gap:10px;background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:0 10px}
+.m-tools em{width:20px;height:20px;border-radius:4px;flex:none}
+.m-tools .qr{background:repeating-conic-gradient(var(--ink) 0 25%, var(--white) 0 50%) 0 0/8px 8px;border:2px solid var(--ink)}
+.m-tools .pen{background:var(--amber)}
+.m-tools .docx{background:var(--slate)}
+.m-tools span b{height:6px;border-radius:6px;background:var(--line);width:50%}
+.m-steps{display:flex;flex-direction:column;gap:8px}
+.m-track{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;margin-bottom:4px}
+.m-track b{height:8px;border-radius:8px;background:var(--mist)}
+.m-track b.on{background:var(--ink)}
+.m-track b.cur{background:var(--amber)}
+.m-btn{width:34%;height:16px;border-radius:999px;background:var(--ink);margin-top:auto}
+.m-form{display:flex;flex-direction:column;gap:7px}
+.m-field{height:14px;border-radius:4px;border:1px solid var(--line);background:var(--paper)}
+.m-field.tall{height:34px}
+.m-form .m-btn{background:var(--amber)}
+.btn-ghost{background:transparent;color:var(--on-ink);border:1.5px solid rgba(255,255,255,.35)}
+.btn-ghost:hover{border-color:var(--on-ink)}
+@media (max-width:1000px){.works{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:640px){.works{grid-template-columns:1fr}}
+
 /* نموذج الطلب */
 .order{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:40px;align-items:start}
 .capacity{margin-top:24px;background:var(--white);border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px;display:flex;flex-direction:column;gap:12px}
@@ -189,6 +251,7 @@ dialog::backdrop{background:rgba(16,42,67,.55)}
         <p class="lead">نصمّم شكل موقعك ونبرمجه ليعمل فعلاً: صفحات تعريفية، ونماذج طلبات، وأنظمة إدارة بقواعد بيانات ولوحات تحكم.</p>
         <div class="hero-actions">
           <a class="btn btn-amber" href="#order">اطلب موقعك</a>
+          <a class="btn btn-ghost" href="#works">شاهد أعمالنا</a>
           <span class="price-chip">تبدأ الأسعار من <b>130</b> ريالاً</span>
         </div>
       </div>
@@ -222,6 +285,70 @@ dialog::backdrop{background:rgba(16,42,67,.55)}
           <p>نظام بقاعدة بيانات ولوحة تحكم وصلاحيات، مثل أنظمة الحضور والشهادات والتقارير والطباعة.</p>
           <div class="fit">يناسب: الجمعيات، والمدارس، والجهات</div>
         </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="block works-band" id="works" aria-labelledby="worksTitle">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2 id="worksTitle">من أعمالنا</h2>
+        <p>أنظمة ومواقع تعمل فعلاً ويستخدمها مئات الأشخاص يومياً. نعرضها دون ذكر أسماء الجهات حفاظاً على خصوصية عملائنا.</p>
+      </div>
+      <div class="works">
+
+        <article class="work">
+          <div class="thumb phone-thumb"><img class="phone" src="works/maqasif.jpg" alt="الشاشة الرئيسية لنظام إدارة المقاصف" loading="lazy" width="500" height="800"></div>
+          <span class="work-type">نظام إدارة</span>
+          <h3>نظام إدارة المقاصف المدرسية</h3>
+          <p class="work-client">لجهة تعليمية تدير عدداً من المراكز</p>
+          <p>يربط إدارة الوحدة بالمراكز ومسؤولات المقاصف: تسجيل المبيعات اليومية والفواتير، وإشعارات الاستلام والتسليم، وقائمة أسعار مشتركة، وتقارير زيارة جاهزة للطباعة.</p>
+          <ul class="chips"><li>ثلاثة أنواع من الحسابات</li><li>توقيع إلكتروني</li><li>تصدير Excel وPDF</li></ul>
+        </article>
+        <article class="work">
+          <div class="thumb phone-thumb"><img class="phone" src="works/mushrifat.jpg" alt="الشاشة الرئيسية لمنظومة الإشراف الميداني" loading="lazy" width="500" height="800"></div>
+          <span class="work-type">نظام إدارة</span>
+          <h3>منظومة الإشراف الميداني</h3>
+          <p class="work-client">لمكتب إشراف في جهة تعليمية</p>
+          <p>تسجّل زيارات المشرفات للمراكز، وتضم استمارات تقييم تحسب الدرجة والتقدير تلقائياً، وتُرسل التقارير إلى المعلمة أو المديرة لتطّلع عليها وتوقّعها.</p>
+          <ul class="chips"><li>عدة وحدات إشرافية</li><li>تقييم بالدرجات</li><li>طباعة بالترويسة الرسمية</li></ul>
+        </article>
+        <article class="work">
+          <div class="thumb phone-thumb"><img class="phone" src="works/adawat.jpg" alt="الشاشة الرئيسية لمنصة الأدوات الإلكترونية" loading="lazy" width="500" height="800"></div>
+          <span class="work-type">أدوات</span>
+          <h3>منصة الأدوات الإلكترونية</h3>
+          <p class="work-client">أدوات مكتبية لفريق عمل</p>
+          <p>إنشاء رمز QR من أي رابط، وتوقيع ملفات PDF والكتابة عليها مع حفظ التوقيع، وتحويل PDF إلى Word، واستخراج النص من الصور، وكل ذلك داخل المتصفح.</p>
+          <ul class="chips"><li>دون تثبيت برامج</li><li>حفظ التوقيعات</li><li>تعمل على الجوال</li></ul>
+        </article>
+        <article class="work">
+          <div class="thumb" aria-hidden="true"><div class="mock"><div class="mock-bar"><i></i><i></i><i></i></div>
+            <div class="mock-body m-grid"><span><i></i><b></b></span><span><i></i><b></b></span><span><i></i><b></b></span><span><i></i><b></b></span><span><i></i><b></b></span><span><i></i><b></b></span></div></div></div>
+          <span class="work-type">بوابة</span>
+          <h3>بوابة المعلمات الموحدة</h3>
+          <p class="work-client">لجهة تعليمية تضم أكثر من 600 معلمة</p>
+          <p>رابط واحد ودخول واحد تجد فيه كل معلمة بياناتها وشهادتها وملاحظات مشرفتها ومحاضر الاجتماعات، مع بقاء كل نظام وقاعدة بياناته مستقلة.</p>
+          <ul class="chips"><li>أكثر من 600 مستخدمة</li><li>ربط عدة أنظمة</li><li>كل معلمة ترى بياناتها فقط</li></ul>
+        </article>
+        <article class="work">
+          <div class="thumb" aria-hidden="true"><div class="mock"><div class="mock-bar"><i></i><i></i><i></i></div>
+            <div class="mock-body m-steps"><div class="m-track"><b class="on"></b><b class="on"></b><b class="cur"></b><b></b></div><b class="m-line"></b><b class="m-line w70"></b><b class="m-line w85"></b><b class="m-btn"></b></div></div></div>
+          <span class="work-type">نظام إدارة</span>
+          <h3>نظام توثيق الأداء</h3>
+          <p class="work-client">لوحدات إدارية في جهة غير ربحية</p>
+          <p>تُعدّ فيه كل وحدة تقرير أدائها على أقسام، ثم يمرّ بمراجعة المديرة واعتمادها، ويُصدَر التقرير النهائي ملف PDF واحداً.</p>
+          <ul class="chips"><li>مسار مراجعة واعتماد</li><li>حفظ المسودات</li><li>تقرير PDF</li></ul>
+        </article>
+        <article class="work">
+          <div class="thumb" aria-hidden="true"><div class="mock"><div class="mock-bar"><i></i><i></i><i></i></div>
+            <div class="mock-body m-form"><b class="m-field"></b><b class="m-field"></b><b class="m-field tall"></b><b class="m-btn"></b></div></div></div>
+          <span class="work-type">موقع</span>
+          <h3>صفحة تواصل وصندوق رسائل</h3>
+          <p class="work-client">لاستخدام شخصي</p>
+          <p>صفحة عامة تعرض وسائل التواصل ونموذجاً لإرسال الرسائل، ولوحة محمية برمز تُعلَّم فيها كل رسالة بـ«تمّ الاطلاع» حتى لا تضيع أي متابعة.</p>
+          <ul class="chips"><li>لوحة إدارة برمز</li><li>متابعة حالة كل رسالة</li></ul>
+        </article>
+
       </div>
     </div>
   </section>
@@ -360,7 +487,7 @@ dialog::backdrop{background:rgba(16,42,67,.55)}
 
 <script>
 /* ===== الإعداد: ضعي هنا رابط تطبيق الويب من Google Apps Script بعد النشر ===== */
-const API_URL = "https://script.google.com/macros/s/AKfycbwuDYaS0qFs1geMni4Ek_U6faz6GsRSDkIR57Ak_XFVBm5sa3Cyhj6e_kGLw7BHXUtiCA/exec";
+const API_URL ="https://script.google.com/macros/s/AKfycbwuDYaS0qFs1geMni4Ek_U6faz6GsRSDkIR57Ak_XFVBm5sa3Cyhj6e_kGLw7BHXUtiCA/exec";
 
 /* ===== أدوات عامة ===== */
 const $ = (id) => document.getElementById(id);
