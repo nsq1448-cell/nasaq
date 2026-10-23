@@ -82,7 +82,18 @@ section.block{padding-block:72px}
 
 /* من أعمالنا */
 .works-band{background:var(--white);border-block:1px solid var(--line)}
-.works{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px 22px;margin-top:36px}
+.works-wrap{position:relative;margin-top:36px}
+.works{display:flex;gap:22px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;scrollbar-width:none;padding-bottom:4px}
+.works::-webkit-scrollbar{display:none}
+.works .work{flex:0 0 calc((100% - 44px)/2.35);scroll-snap-align:start}
+@media (max-width:860px){.works .work{flex-basis:62%}}
+@media (max-width:560px){.works .work{flex-basis:84%}}
+.wnav{position:absolute;top:var(--navTop,110px);z-index:2;width:46px;height:46px;border-radius:50%;border:0;background:var(--amber);color:var(--ink);display:grid;place-items:center;cursor:pointer;box-shadow:0 6px 16px -6px rgba(16,42,67,.5);transition:opacity .2s}
+.wnav.prev{right:-12px}.wnav.next{left:-12px}
+.wnav[disabled]{opacity:.3;cursor:default}
+.wdots{display:flex;justify-content:center;gap:8px;margin-top:22px}
+.wdot{width:10px;height:10px;padding:0;border-radius:10px;border:0;background:var(--line);cursor:pointer;transition:width .2s,background .2s}
+.wdot[aria-current="true"]{width:28px;background:var(--ink)}
 .work{display:flex;flex-direction:column;gap:8px;min-width:0}
 .work h3{font-size:21px;margin-top:6px}
 .work p{color:var(--slate);font-size:16px}
@@ -139,8 +150,6 @@ section.block{padding-block:72px}
 .m-form .m-btn{background:var(--amber)}
 .btn-ghost{background:transparent;color:var(--on-ink);border:1.5px solid rgba(255,255,255,.35)}
 .btn-ghost:hover{border-color:var(--on-ink)}
-@media (max-width:1000px){.works{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media (max-width:640px){.works{grid-template-columns:1fr}}
 
 /* نموذج الطلب */
 .order{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:40px;align-items:start}
@@ -219,6 +228,8 @@ dialog::backdrop{background:rgba(16,42,67,.55)}
 .toast{position:fixed;bottom:calc(20px + env(safe-area-inset-bottom, 0px));left:50%;transform:translateX(-50%);background:var(--ink);color:var(--on-ink);padding:10px 20px;border-radius:999px;font-size:15px;z-index:50;max-width:calc(100vw - 32px)}
 
 @media (max-width:860px){
+  .wnav.prev{right:-6px}.wnav.next{left:-6px}
+
   .hero{padding-block:28px 56px}
   .services,.steps{grid-template-columns:1fr}
   .order{grid-template-columns:1fr}
@@ -295,7 +306,10 @@ dialog::backdrop{background:rgba(16,42,67,.55)}
         <h2 id="worksTitle">من أعمالنا</h2>
         <p>أنظمة قيد الاستخدام الفعلي، وجميعها تعمل على الحاسب والجوال. نعرضها دون ذكر أسماء الجهات حفاظاً على خصوصيتها.</p>
       </div>
-      <div class="works">
+      <div class="works-wrap">
+        <button class="wnav prev" id="wPrev" type="button" aria-label="العمل السابق"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
+        <button class="wnav next" id="wNext" type="button" aria-label="العمل التالي"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button>
+      <div class="works" id="worksTrack">
 
         <article class="work">
           <div class="thumb phone-thumb"><img class="phone" src="works/maqasif.jpg" alt="الشاشة الرئيسية لنظام إدارة المقاصف" loading="lazy" width="500" height="800"></div>
@@ -321,6 +335,8 @@ dialog::backdrop{background:rgba(16,42,67,.55)}
           <p>إنشاء رمز QR من أي رابط، وتوقيع ملفات PDF والكتابة عليها مع حفظ التوقيع، وتحويل PDF إلى Word، واستخراج النص من الصور، وكل ذلك داخل المتصفح.</p>
           <ul class="chips"><li>دون تثبيت برامج</li><li>حفظ التوقيعات</li></ul>
         </article>
+      </div>
+        <div class="wdots" id="wDots" role="group" aria-label="التنقل بين الأعمال"></div>
       </div>
     </div>
   </section>
@@ -695,6 +711,32 @@ $('closedToggle').addEventListener('change', async (e) => {
   try { const r = await api('admin_settings', { pin: PIN, closed }); if (r.ok) { toast(closed ? 'تمّ إيقاف استقبال الطلبات' : 'تمّ فتح استقبال الطلبات'); await reload(); } else toast(r.error || 'تعذّر الحفظ'); }
   catch (err) { toast('تعذّر الاتصال'); }
 });
+
+/* ===== شريط الأعمال ===== */
+(function(){
+  const track=$('worksTrack'), prev=$('wPrev'), next=$('wNext'), dots=$('wDots');
+  if(!track) return;
+  const cards=[...track.children];
+  const step=()=>cards[0].getBoundingClientRect().width+22;
+  const pos=()=>Math.abs(track.scrollLeft);
+  const max=()=>track.scrollWidth-track.clientWidth;
+  cards.forEach((c,i)=>{const d=document.createElement('button');d.type='button';d.className='wdot';d.setAttribute('aria-label','العمل '+(i+1));d.addEventListener('click',()=>go(i));dots.appendChild(d);});
+  function go(i){const x=Math.min(i*step(),max());track.scrollTo({left:-x});}
+  function update(){
+    const t=cards[0].querySelector('.thumb,.shot'); if(t) track.parentElement.style.setProperty('--navTop',(t.offsetHeight/2-23)+'px');
+    const m=max(), p=pos();
+    prev.disabled=p<=2; next.disabled=p>=m-2;
+    prev.hidden=next.hidden=dots.hidden=m<=2;
+    const idx=p>=m-2?cards.length-1:Math.round(p/step());
+    [...dots.children].forEach((d,i)=>d.setAttribute('aria-current',String(i===idx)));
+  }
+  prev.addEventListener('click',()=>track.scrollBy({left:step()}));
+  next.addEventListener('click',()=>track.scrollBy({left:-step()}));
+  track.addEventListener('scroll',()=>requestAnimationFrame(update),{passive:true});
+  window.addEventListener('resize',update);
+  window.addEventListener('load',update);
+  update();
+})();
 
 /* ===== البدء ===== */
 $('demoNote').hidden = !DEMO;
